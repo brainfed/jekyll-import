@@ -58,12 +58,13 @@ module JekyllImport
         canonical_link = options.fetch("canonical_link", false)
 
         header = {
-          "layout"        => "post",
+          "layout"        => "podcast",
           "title"         => item.title,
           "canonical_url" => (canonical_link ? item.link : nil),
           "tag"           => get_tags(item, options),
           "permalink"     => post_name,
-          "image"         => item.itunes_image.href
+          "image"         => item.itunes_image.href,
+          "audio"         => audio
         }.compact
 
         frontmatter.each do |value|
@@ -84,16 +85,7 @@ module JekyllImport
         File.open("_posts/#{name}.md", "w") do |f|
           f.puts header.to_yaml
           f.puts "---\n\n"
-
-          if audio
-            f.puts <<~HTML
-              <audio controls="">
-                <source src="#{audio}" type="audio/mpeg">
-                Your browser does not support the audio element.
-              </audio>
-            HTML
-          end
-          f.puts '<div class="podcast-description">'
+          f.puts '<div class="shownotes">'
             f.puts output
           f.puts '</div>'
         end
