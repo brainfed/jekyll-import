@@ -62,7 +62,8 @@ module JekyllImport
           "title"         => item.title,
           "canonical_url" => (canonical_link ? item.link : nil),
           "tag"           => get_tags(item, options),
-          "permalink"     => post_name
+          "permalink"     => post_name,
+          "image"         => item.itunes_image.href
         }.compact
 
         frontmatter.each do |value|
@@ -80,7 +81,7 @@ module JekyllImport
 
         FileUtils.mkdir_p("_posts")
 
-        File.open("_posts/#{name}.html", "w") do |f|
+        File.open("_posts/#{name}.md", "w") do |f|
           f.puts header.to_yaml
           f.puts "---\n\n"
 
@@ -92,8 +93,9 @@ module JekyllImport
               </audio>
             HTML
           end
-
-          f.puts output
+          f.puts '<div class="podcast-description">'
+            f.puts output
+          f.puts '</div>'
         end
       end
 
